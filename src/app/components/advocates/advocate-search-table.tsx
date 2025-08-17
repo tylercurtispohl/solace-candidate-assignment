@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Advocate } from "@/app/lib/types";
 
+const headerColClassNames =
+  "px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-700";
+
 export default function AdvocateSearchTable() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
@@ -64,57 +67,62 @@ export default function AdvocateSearchTable() {
   };
 
   return (
-    <>
-      <div>
-        <p>Search</p>
-        <p>Searching for: {searchTerm}</p>
-        <input
-          ref={searchTermInputRef}
-          style={{ border: "1px solid black" }}
-          onChange={onSearchInputChange}
-        />
-        <button onClick={onResetSearchClick}>Reset Search</button>
-      </div>
-      <br />
-      <br />
-      {isDataLoading ? (
+    <div className="px-6 flex flex-col">
+      <div className="self-center w-full max-w-[1536px]">
         <div>
-          <p>Loading...</p>
+          <input
+            ref={searchTermInputRef}
+            style={{ border: "1px solid black" }}
+            onChange={onSearchInputChange}
+            placeholder="search..."
+          />
+          <button className="ml-2" onClick={onResetSearchClick}>
+            <span className="font-semibold hover:text-red-700">X</span>
+          </button>
         </div>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>City</th>
-              <th>Degree</th>
-              <th>Specialties</th>
-              <th>Years of Experience</th>
-              <th>Phone Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAdvocates.map((advocate) => {
-              return (
-                <tr key={`${advocate.id}`}>
-                  <td>{advocate.firstName}</td>
-                  <td>{advocate.lastName}</td>
-                  <td>{advocate.city}</td>
-                  <td>{advocate.degree}</td>
-                  <td>
-                    {advocate.specialties.map((s) => (
-                      <div key={`${advocate.id}_${s}`}>{s}</div>
-                    ))}
-                  </td>
-                  <td>{advocate.yearsOfExperience}</td>
-                  <td>{advocate.phoneNumber}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      )}
-    </>
+        <br />
+        <br />
+        {isDataLoading ? (
+          <div>
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <table className="min-w-full table-auto">
+            <thead className="bg-gray-100">
+              <tr className="border-b border-gray-300">
+                <th className={headerColClassNames}>First Name</th>
+                <th className={headerColClassNames}>Last Name</th>
+                <th className={headerColClassNames}>City</th>
+                <th className={headerColClassNames}>Degree</th>
+                <th className={headerColClassNames}>Specialties</th>
+                <th className={headerColClassNames}>Years of Experience</th>
+                <th className={headerColClassNames}>Phone Number</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 text-sm">
+              {filteredAdvocates.map((advocate) => {
+                return (
+                  <tr key={`${advocate.id}`} className="hover:bg-gray-50">
+                    <td className="px-4 py-2">{advocate.firstName}</td>
+                    <td className="px-4 py-2">{advocate.lastName}</td>
+                    <td className="px-4 py-2">{advocate.city}</td>
+                    <td className="px-4 py-2">{advocate.degree}</td>
+                    <td className="px-4 py-2 align-top">
+                      <ul className="list-disc pl-5 space-y-1">
+                        {advocate.specialties.map((s) => (
+                          <li key={`${advocate.id}_${s}`}>{s}</li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="px-4 py-2">{advocate.yearsOfExperience}</td>
+                    <td className="px-4 py-2">{advocate.phoneNumber}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
   );
 }
